@@ -28,12 +28,12 @@ public class State {
     public boolean isTerminal(){return this.isTerminal;}
     public int getWinner(){return this.winner;}
     public void printState(){
-        System.out.println("Dealer Has: " + getDealersCard());
+        /*System.out.println("Dealer Has: " + getDealersCard());
         System.out.println("You have: " + getPlayerSum());
         if (isTerminal){
             if(winner == Game.PLAYER)System.out.println("you win!");
             else if(winner == Game.DEALER)System.out.println("dealer wins!");
             else System.out.println("Draw!");
-        }
+        }*/
     }
 }

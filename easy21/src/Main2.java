@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Created by outer2g on 2/03/17.
  */
-public class Main {
+public class Main2 {
     public static void main(String [ ] args) throws IOException, ClassNotFoundException {
         System.out.println("Welcome to Easy21 Game!");
         System.out.println("Please Insert which kind of game you wanna play:");
@@ -36,7 +36,7 @@ public class Main {
                 break;
         }
         if (option == 1 || option == 2){
-            if (option == 2) agent.loadValueFunction("valueFunction-"+ lambda + "-" + gamma+".ser");
+            if (option == 2) agent.loadValueFunction("valueFunctions/Q-Learning/run/user-friendly/valueFunction-"+ lambda + "-" + gamma+".ser");
             while(true){
                 int totalEpisodes = 1;
                 System.out.println("How many episodes at once you wanna play");
@@ -51,10 +51,10 @@ public class Main {
                     System.out.println();
                 }
             }
-            agent.saveValueFunction("valueFunction-"+ lambda + "-" + gamma+".ser");
+            agent.saveValueFunction("valueFunctions/Q-Learning/run/user-friendly/valueFunction-"+ lambda + "-" + gamma+".ser");
         }
         if (option == 3){
-            agent.loadValueFunction("valueFunction-"+ lambda + "-" + gamma+".ser");
+            agent.loadValueFunction("valueFunctions/Q-Learning/run/user-friendly/valueFunction-"+ lambda + "-" + gamma+".ser");
             while(true){
                 int totalGames = 1;
                 System.out.println("How many games at once you wanna play");
@@ -84,7 +84,7 @@ public class Main {
                 }
             }
         }
-}
+    }
     private static void runEpisode(int nEpisode){
 
     }

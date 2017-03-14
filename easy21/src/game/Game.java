@@ -2,7 +2,6 @@ package game;
 
 
 import Agents.Agent;
-import Agents.MCAgent;
 
 import java.util.Random;
 
@@ -27,30 +26,41 @@ public class Game {
         Card dealerCard,playerCard;
         while(!(dealerCard = drawCard()).isCardRed());
         while(!(playerCard = drawCard()).isCardRed());
-        dealersHand += dealerCard.getCardNumber();
-        playersHand += playerCard.getCardNumber();
+        dealersHand = dealerCard.getCardNumber();
+        playersHand = playerCard.getCardNumber();
         return new StateRewardPair(new State(dealerCard.getCardNumber(),playersHand),0);
     }
-    public StateRewardPair step(State previousState,Action action){
+    public StateRewardPair step(State previousState,Action action) {
+
+        /*previousState.printState();
+        if (Action.ACTION_HIT == action.getAction()) System.out.println("You Hit!");
+        else System.out.println("You Stay!");*/
         if (action.getAction() == Action.ACTION_HIT) hit(Game.PLAYER);
         else {
-            while (dealersHand <= 17){
+            while (dealersHand <= 17) {
                 hit(Game.DEALER);
-                if (dealersHand > 21 || dealersHand < 1){
-                    State state = new State(dealersHand,playersHand,true,Game.PLAYER);//dealer goes bust
-                    return new StateRewardPair(state,1);
-                    }
+                if (dealersHand > 21 || dealersHand < 1) {
+                    State state = new State(previousState.getDealersCard(), previousState.getPlayerSum()
+                            , true, Game.PLAYER);//dealer goes bust
+                    new State(dealersHand,playersHand);
+                    //System.out.println("Dealer Busted!");
+                    return new StateRewardPair(state, 1);
+                }
             }
             if (dealersHand == playersHand) return new StateRewardPair(
-                    new State(dealersHand,playersHand,true,Game.DRAW),0);
+                    new State(previousState.getDealersCard(), previousState.getPlayerSum(), true, Game.DRAW), 0);
             return new StateRewardPair(
-                    new State(dealersHand,playersHand,true,
+                    new State(previousState.getDealersCard(), previousState.getPlayerSum(), true,
                             dealersHand > playersHand ? Game.DEALER : Game.PLAYER),
                     dealersHand > playersHand ? -1 : 1);
         }
-        if (playersHand > 21 || playersHand < 1)
+        if (playersHand > 21 || playersHand < 1){
+            new State(dealersHand,playersHand);
+            //System.out.println("You Bust");
             return new StateRewardPair(
-                    new State(dealersHand,playersHand,true,Game.DEALER),-1);//player busts => dealer wins
+                    new State(previousState.getDealersCard(), previousState.getPlayerSum()
+                            , true, Game.DEALER), -1);//player busts => dealer wins
+    }
         return new StateRewardPair(new State(dealersHand,playersHand),0);
 
     }
