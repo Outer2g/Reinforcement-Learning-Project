@@ -6,7 +6,6 @@ package utils;
 public class Position {
     public int x;
     public int y;
-    public final double ;
     public Position(){
         x = 0;
         y = 0;

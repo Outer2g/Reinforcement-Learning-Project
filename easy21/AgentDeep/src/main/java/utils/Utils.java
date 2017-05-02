@@ -1,11 +1,20 @@
 package utils;
 
+import enumerate.State;
 import game.FightingGameState;
 
 /**
  * Created by outer2g on 30/04/17.
  */
 public class Utils {
+    public static final double stageMaxX = 960.0;
+    public static final double stageMaxY = 640;
+    public static final double stageMeanX= 480.0;
+    public static final double stageMeanY = 320.0;
+    public static final double lowestHP = -1400;
+    public static final double meanHP = -700;
+    public static final double meanState = State.values().length / 2;
+
     public static int calculateReward(FightingGameState gameState, FightingGameState gameState1, boolean player){
         int diffplayerHP = gameState.getPlayer().hp;
         diffplayerHP -= gameState1.getPlayer().hp;

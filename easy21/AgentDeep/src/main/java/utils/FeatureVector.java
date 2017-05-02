@@ -1,8 +1,10 @@
 package utils;
 
+import enumerate.State;
 import game.FightingGameState;
 import game.Player;
 
+import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 
 /**
@@ -10,28 +12,29 @@ import java.util.ArrayList;
  */
 public class FeatureVector {
 
-    public ArrayList<Integer> featureVector;
+    public ArrayList<Double> featureVector;
     public static final int N_FEATURES = 8;
     public FeatureVector(){}
     public FeatureVector(FightingGameState gameState){
         convertState(gameState);
     }
     private void extractFeatures(Player player){
-        featureVector.add(player.position.x);
-        featureVector.add(player.position.y);
-        featureVector.add(player.hp);
-        featureVector.add(player.playerState.ordinal());
+        // normalized values
+        featureVector.add((player.position.x - Utils.stageMeanX) / Utils.stageMaxX);
+        featureVector.add((player.position.y - Utils.stageMeanY) / Utils.stageMaxY);
+        featureVector.add((player.hp - Utils.meanHP) / Utils.lowestHP);
+        featureVector.add((player.playerState.ordinal() - Utils.meanState) / State.values().length);
     }
-    public ArrayList<Integer> convertState(FightingGameState gameState){
+    public ArrayList<Double> convertState(FightingGameState gameState){
         if (gameState != null) {
 
 
-            featureVector = new ArrayList<Integer>();
+            featureVector = new ArrayList<Double>();
             extractFeatures(gameState.getPlayer());
             extractFeatures(gameState.getEnemy());
 
             return featureVector;
         }
-        return new ArrayList<Integer>();
+        return new ArrayList<Double>();
     }
 }

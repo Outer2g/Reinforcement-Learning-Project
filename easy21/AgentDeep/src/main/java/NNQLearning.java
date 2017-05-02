@@ -63,12 +63,17 @@ public class NNQLearning{
                 .layer(0, new DenseLayer.Builder()
                         //nIn and nOut specify depth. nIn here is the nChannels and nOut is the number of filters to be applied
                         .nIn(FeatureVector.N_FEATURES)
-                        .nOut(50)
+                        .nOut(100)
                         .activation(Activation.IDENTITY)
                         .build())
                 .layer(1, new DenseLayer.Builder()
                         //nIn and nOut specify depth. nIn here is the nChannels and nOut is the number of filters to be applied
-                        .nIn(50)
+                        .nIn(100)
+                        .nOut(200)
+                        .activation(Activation.IDENTITY)
+                        .build()).layer(1, new DenseLayer.Builder()
+                        //nIn and nOut specify depth. nIn here is the nChannels and nOut is the number of filters to be applied
+                        .nIn(200)
                         .nOut(100)
                         .activation(Activation.IDENTITY)
                         .build())
@@ -217,7 +222,7 @@ public class NNQLearning{
 
     private double[][] getStateAsMatrix(FightingGameState state){
         double [][] stateRequest = new double[1][FeatureVector.N_FEATURES];
-        ArrayList<Integer> featureVector = new FeatureVector(state).featureVector;
+        ArrayList<Double> featureVector = new FeatureVector(state).featureVector;
         for (int i = 0; i < FeatureVector.N_FEATURES; i++) {
             stateRequest[0][i] = featureVector.get(i);
         }

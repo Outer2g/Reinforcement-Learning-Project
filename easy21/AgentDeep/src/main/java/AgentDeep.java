@@ -45,6 +45,10 @@ public class AgentDeep implements AIInterface {
         } catch (IOException e) {
             System.out.println("Neural Networks not yet generated");
         }
+        consoleLog("Max x: " + gameData.getStageXMax());
+        consoleLog("Max y: " + gameData.getStageYMax());
+        consoleLog("Mean x: " + gameData.getStageXMax()/2.0);
+        consoleLog("Mean y: " + gameData.getStageYMax()/2.0);
         return 0;
     }
     //gets info each frame
