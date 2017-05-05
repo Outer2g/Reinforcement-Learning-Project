@@ -1,5 +1,6 @@
 package utils;
 
+import enumerate.Action;
 import enumerate.State;
 import game.FightingGameState;
 import game.Player;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 public class FeatureVector {
 
     public ArrayList<Double> featureVector;
-    public static final int N_FEATURES = 8;
+    public static final int N_FEATURES = 11;
     public FeatureVector(){}
     public FeatureVector(FightingGameState gameState){
         convertState(gameState);
@@ -24,6 +25,7 @@ public class FeatureVector {
         featureVector.add((player.position.y - Utils.stageMeanY) / Utils.stageMaxY);
         featureVector.add((player.hp - Utils.meanHP) / Utils.lowestHP);
         featureVector.add((player.playerState.ordinal() - Utils.meanState) / State.values().length);
+        featureVector.add((player.energy - Utils.meanEnergy) / Utils.highestEnergy);
     }
     public ArrayList<Double> convertState(FightingGameState gameState){
         if (gameState != null) {
@@ -31,7 +33,10 @@ public class FeatureVector {
 
             featureVector = new ArrayList<Double>();
             extractFeatures(gameState.getPlayer());
-            extractFeatures(gameState.getEnemy());
+            Player enemy = gameState.getEnemy();
+            extractFeatures(enemy);
+            //action from opponent
+            featureVector.add((double) ((enemy.action.ordinal() - (Action.values().length/2)) / Action.values().length));
 
             return featureVector;
         }

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AgentDeep/AgentDeep.iml" filepath="$PROJECT_DIR$/AgentDeep/AgentDeep.iml" />
       <module fileurl="file://$PROJECT_DIR$/easy21.iml" filepath="$PROJECT_DIR$/easy21.iml" />
     </modules>
   </component>

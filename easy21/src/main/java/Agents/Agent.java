@@ -37,7 +37,7 @@ public abstract class Agent {
     protected boolean epsilonRandom(double epsilon){
         double randomValue = rand.nextDouble();
         //with probability 1-epsilon we take a greedy action, else take random
-         return epsilon >= randomValue;
+         return epsilon <= randomValue;
     }
     protected void initTo0(double[][][] matrix){
         for (int i = 0; i < 10; ++i){

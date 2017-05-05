@@ -1,5 +1,6 @@
 package game;
 
+import enumerate.Action;
 import enumerate.State;
 import structs.CharacterData;
 import utils.Position;
@@ -9,11 +10,12 @@ import utils.Position;
  */
 public class Player {
     public Position position;
-    public int hp;
+    public int hp,energy;
     public State playerState;
+    public Action action;
     public Player(){
         position = new Position();
-        hp = 0;
+        hp = energy =  0;
         playerState = State.STAND;
     }
     public Player(CharacterData player){
@@ -24,5 +26,7 @@ public class Player {
 
         this.hp = player.getHp();
         this.playerState = player.getState();
+        this.energy = player.getEnergy();
+        this.action = player.getAction();
     }
 }

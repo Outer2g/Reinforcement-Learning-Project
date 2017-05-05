@@ -112,7 +112,6 @@ public class QLAgent extends Agent {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
             out.writeObject(Q);
-            out.writeChars("hola");
             out.flush();
             out.close();
         } catch (IOException e) {

@@ -6,14 +6,43 @@
 
     <groupId>com.outer2g</groupId>
     <artifactId>easy21</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>AgentDeep</module>
+    </modules>
     <name>easy21</name>
     <url>http://maven.apache.org</url>
     <properties>
         <nd4j.backend>nd4j-cuda-8.0-platform</nd4j.backend>
+        <nd4j.version>0.8.0</nd4j.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.nd4j</groupId>
+                <artifactId>nd4j-native-platform</artifactId>
+                <version>${nd4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.nd4j</groupId>
+                <artifactId>nd4j-cuda-7.5-platform</artifactId>
+                <version>${nd4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.nd4j</groupId>
+                <artifactId>nd4j-cuda-8.0-platform</artifactId>
+                <version>${nd4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <dependency>
+        <groupId>org.nd4j</groupId>
+        <artifactId>${nd4j.backend}</artifactId>
+    </dependency>
         <dependency>
             <groupId>org.jblas</groupId>
             <artifactId>jblas</artifactId>

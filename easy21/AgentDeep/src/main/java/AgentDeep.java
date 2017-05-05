@@ -30,12 +30,13 @@ public class AgentDeep implements AIInterface {
     private NNQLearning agent;
     private FightingGameState gameState,previousGameState;
     private final String path = "data/aiData/Neural";
+    private int frameNumber;
     //one time at the start of each game
     public int initialize(GameData gameData, boolean player) {
         inputKey = new Key();
         this.player = player;
         frameData = new FrameData();
-        this.agent = new NNQLearning(0.5,0.5);
+        this.agent = new NNQLearning(0.2,0.2);
         cc = new CommandCenter();
         first = true;
         try {
@@ -43,12 +44,17 @@ public class AgentDeep implements AIInterface {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Neural Networks not yet generated");
+            consoleLog("Neural Networks not yet generated");
         }
         consoleLog("Max x: " + gameData.getStageXMax());
         consoleLog("Max y: " + gameData.getStageYMax());
         consoleLog("Mean x: " + gameData.getStageXMax()/2.0);
         consoleLog("Mean y: " + gameData.getStageYMax()/2.0);
+        consoleLog("Actions");
+        for (int i = 0; i < Utils.ReducedActions.values().length; i++) {
+            consoleLog(Utils.ReducedActions.values()[i].name());
+
+        }
         return 0;
     }
     //gets info each frame
@@ -59,6 +65,8 @@ public class AgentDeep implements AIInterface {
      use the CommandCenter class.
      */
     public void getInformation(FrameData frameData) {
+        frameNumber = frameData.getFrameNumber();
+        System.out.println("Frame: " + frameNumber);
         shouldProcess = (!frameData.getEmptyFlag() && frameData.getRemainingTimeMilliseconds() > 0);
         if (shouldProcess) {
             this.frameData = frameData;
@@ -71,6 +79,11 @@ public class AgentDeep implements AIInterface {
     //executed each frame
     public void processing() {
         if (shouldProcess && !first){
+            if (agent.getIterationsToTrain() == agent.batchSize){
+                consoleLog("Now Training!!!!");
+                agent.trainNNByExperienceReplay();
+            }
+            if (frameNumber == 0){agent.newEpisode();}
             if (cc.getSkillFlag()){
                 inputKey = cc.getSkillKey();
             }
@@ -79,7 +92,7 @@ public class AgentDeep implements AIInterface {
                 int reward = Utils.calculateReward(gameState, previousGameState, player);
                 consoleLog("Reward: " + reward);
                 consoleLog("Getting action...");
-                Action action = Action.values()[agent.actEpsilonGreedy(gameState)];
+                Utils.ReducedActions action = Utils.ReducedActions.values()[agent.actEpsilonGreedy(gameState)];
                 consoleLog("Action: " + action.name());
                 Transition transition = new Transition(previousGameState, action, reward, gameState);
                 agent.learn(transition);
@@ -90,7 +103,7 @@ public class AgentDeep implements AIInterface {
         }
         else if (first && shouldProcess){
             consoleLog("getting action...");
-            Action action = Action.values()[agent.actEpsilonGreedy(gameState)];
+            Utils.ReducedActions action = Utils.ReducedActions.values()[agent.actEpsilonGreedy(gameState)];
             consoleLog("Action to be taken: " + action.name());
             previousGameState = gameState;
             inputKey.empty();
