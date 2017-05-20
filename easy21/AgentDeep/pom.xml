@@ -4,20 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.outer2g</groupId>
-    <artifactId>easy21</artifactId>
-    <packaging>pom</packaging>
+    <groupId>com.outer2g.tfg</groupId>
+    <artifactId>AgentDeep</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>AgentDeep</module>
-    </modules>
-    <name>easy21</name>
-    <url>http://maven.apache.org</url>
     <properties>
-        <nd4j.backend>nd4j-cuda-8.0-platform</nd4j.backend>
+        <nd4j.backend>nd4j-native-platform</nd4j.backend>
+        <!--<nd4j.backend>nd4j-cuda-8.0-platform</nd4j.backend>-->
         <nd4j.version>0.8.0</nd4j.version>
+        <dl4j.version>0.8.0</dl4j.version>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -40,18 +35,13 @@
 
     <dependencies>
         <dependency>
-        <groupId>org.nd4j</groupId>
-        <artifactId>${nd4j.backend}</artifactId>
-    </dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>${nd4j.backend}</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.jblas</groupId>
             <artifactId>jblas</artifactId>
             <version>1.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-native-platform</artifactId>
-            <version>0.8.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -62,7 +52,18 @@
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-core</artifactId>
-            <version>0.8.0</version>
+            <version>${dl4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nlp</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fightingGame</groupId>
+            <artifactId>AIToolKit</artifactId>
+            <version>3.0.0</version>
         </dependency>
     </dependencies>
     <build>
@@ -75,11 +76,6 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>Main</mainClass>
-                        </manifest>
-                    </archive>
                 </configuration>
                 <executions>
                     <execution>
@@ -94,13 +90,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>

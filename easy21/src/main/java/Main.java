@@ -50,7 +50,6 @@ public class Main {
                 int totalEpisodes = 1;
                 System.out.println("How many episodes at once you wanna play");
                 System.out.println("Executing " + episodes + " episodes...");
-                int x = 0;
                 for (int i = 0; i < episodes;++i) {
                     if (totalEpisodes == 5000) {
                         System.out.println("Episode: " + i);

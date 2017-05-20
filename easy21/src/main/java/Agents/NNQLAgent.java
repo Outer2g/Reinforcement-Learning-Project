@@ -50,8 +50,8 @@ public class NNQLAgent extends Agent{
                 .seed(123456)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .iterations(1)
-                .learningRate(0.006)
-                .updater(Updater.NESTEROVS).momentum(0.9)
+                .learningRate(0.0012)
+                .updater(Updater.ADAM).momentum(0.9)
                 .regularization(true).l2(1e-4)
                 .list()
                 .layer(0, new DenseLayer.Builder()
@@ -81,12 +81,7 @@ public class NNQLAgent extends Agent{
         //with probability 1-epsilon we take a greedy action, else take random
         if (epsilonRandom(epsilon)){
             //take greedy
-            double [][] stateRequest = new double[1][2];
-            stateRequest[0][0] = state.getPlayerSum();
-            stateRequest[0][1] = state.getDealersCard();
-            INDArray Q = getCurrentNetwork().output(Nd4j.create(stateRequest));
-            if(Q.getColumn(0).getDouble(0) > Q.getColumn(1).getDouble(0)) return 0;
-            else return 1;
+            return selectGreedyAction(state);
         }
         else return rand.nextInt(Action.NPOSSIBILITIES);
     }
@@ -106,28 +101,45 @@ public class NNQLAgent extends Agent{
     private void swapNetworks(){whichModel = !whichModel;}
 
     private void trainNN(ArrayList<Transition> batch,State state, StateRewardPair gameState, int action){
-        double [][] states = new double [batchSize][2];
+        System.out.println("training");
+        double [][] states = new double [batchSize][Action.NPOSSIBILITIES]; // actually possibilities of feature
         for (int i = 0 ; i < batchSize; ++i){
-            states[i][0] = batch.get(i).cstate.getPlayerSum();
-            states[i][1] = batch.get(i).cstate.getDealersCard();
+            FeatureVector featureVector = new FeatureVector(batch.get(i).cstate);
+            for (int j = 0; j < Action.NPOSSIBILITIES; j++) {
+                states[i][j] = featureVector.featureVector.get(j);
+            }
         }
         INDArray stateHistory = Nd4j.create(states);
         INDArray currentQValues = getCurrentNetwork().output(stateHistory);
         INDArray frozenQValues = getFrozenNetwork().output(stateHistory);
-        INDArray CQVal0 = currentQValues.getColumn(0);
-        INDArray CQVal1 = currentQValues.getColumn(1);
-        INDArray OQVal0 = frozenQValues.getColumn(0);
-        INDArray OQVal1 = frozenQValues.getColumn(1);
+        ArrayList<INDArray> CQVals = new ArrayList<INDArray>();
+        ArrayList<INDArray> OQVals = new ArrayList<INDArray>();
+        for (int i = 0; i < Action.NPOSSIBILITIES; i++) {
+            CQVals.add(currentQValues.getColumn(i));
+            OQVals.add(frozenQValues.getColumn(i));
 
-        double [][] QValues = new double[batchSize][2];
+        }
+//        INDArray CQVal0 = currentQValues.getColumn(0);
+//        INDArray CQVal1 = currentQValues.getColumn(1);
+//        INDArray OQVal0 = frozenQValues.getColumn(0);
+//        INDArray OQVal1 = frozenQValues.getColumn(1);
+
+        double [][] QValues = new double[batchSize][Action.NPOSSIBILITIES];
 
         for (int i = 0; i < batchSize; ++i){
             int reward = batch.get(i).rewardAchieved;
-            double maxOQVal = Math.max(OQVal0.getDouble(i),OQVal1.getDouble(i));
-            QValues[i][0] = reward + (gamma * maxOQVal) + CQVal0.getDouble(i);
-            QValues[i][1] = reward + (gamma * maxOQVal) + CQVal1.getDouble(i);
+            ArrayList<Double> QActions = new ArrayList<Double>();
+            for (int j = 0; j < Action.NPOSSIBILITIES; j++) {
+                QActions.add(OQVals.get(j).getDouble(i));
+            }
+            double maxOQVal = Collections.max(QActions);
+            for (int j = 0; j < Action.NPOSSIBILITIES; j++) {
+                QValues[i][j] = reward + (gamma * maxOQVal) + CQVals.get(j).getDouble(i);
+            }
         }
         INDArray QvaluesArray = Nd4j.create(QValues);
+        System.out.println("SizeState " + stateHistory.length());
+        System.out.println("QvalsArraySize " + QvaluesArray.length());
         model.fit(stateHistory,QvaluesArray);
 
     }
@@ -163,6 +175,8 @@ public class NNQLAgent extends Agent{
         stateRequest[0][0] = state.getPlayerSum();
         stateRequest[0][1] = state.getDealersCard();
         INDArray Q = getCurrentNetwork().output(Nd4j.create(stateRequest));
+
+        System.out.println("NN - Q values: " + Q);
         if (Q.getColumn(0).getDouble(0) > Q.getColumn(1).getDouble(0)) return 0;
         else return 1;
     }
