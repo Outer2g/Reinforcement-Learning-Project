@@ -117,7 +117,7 @@ public class NNSARSA{
     public int actEpsilonGreedy(FightingGameState state){
 
         //with probability 1-epsilon we take a greedy action, else take random
-        boolean takeGreedy = epsilonRandom(0.6);
+        boolean takeGreedy = epsilonRandom(epsilon);
         //scale down epsilon
         epsilon -= (epsilon0 - finalEpsilon) / explore;
         if (takeGreedy){

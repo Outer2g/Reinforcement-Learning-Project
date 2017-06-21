@@ -116,7 +116,7 @@ public class MNNQLearning {
     public int actEpsilonGreedy(byte[][] state){
 
         //with probability 1-epsilon we take a greedy action, else take random
-        boolean takeGreedy = epsilonRandom(0.9);
+        boolean takeGreedy = epsilonRandom(epsilon);
         //scale down epsilon
         epsilon -= (epsilon0 - finalEpsilon) / explore;
         if (takeGreedy){
